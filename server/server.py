@@ -35,21 +35,25 @@ def requires_auth(f):
 @app.route('/')
 @requires_auth
 def welcome():
-    return "This works" # render_template('set_layout.html')
+    return render_template('set_layout.html')
 
 @app.route('/secret-page')
 @requires_auth
 def secret_page():
-    return "YOu are doomed!"
+    return "This works"
 
-@app.route('/input/_adj-graph', methods=['POST'])
+@app.route('/input/adjgraph/', methods=['POST'])
 @requires_auth
 def read_graph():
     #data = '{"a":{"b":5}}'
-    graph = json.loads(requests.json);
-    print graph
-    return str(graph["a"]["b"])
+    graph = request.get_json()
+    print graph["a"]["b"]
+    return "Graph submitted"
 
+def read_points():
+    points = request.get_json()
+    print points
+    return "Graph submitted"
     
 
 if __name__ == "__main__":

@@ -1,0 +1,15 @@
+{% extends "home.html" %}
+
+{% block custom_header %}
+<!-- <link rel=stylesheet type=text/css href="{{ url_for('static',filename='set_layout.css') }}"> -->
+<!-- <script src="{{url_for('static',filename='stuff.js') }}"></script> -->
+{% endblock %}
+
+{% block body %}
+<p> This is some text. Here's a button that does stuff: </p>
+<form onSubmit="computeInput()">
+  <h2>What do you wish to calculate?</h2>
+  <input id="equationInput" type="text" value="(1 + 5) * (8-4-1)">
+  <input type="submit" id="submitButton" value="Calculate">
+</form>
+{% endblock %}

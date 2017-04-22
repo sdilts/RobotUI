@@ -1,5 +1,7 @@
 server/UI_Server
 lib/
 
+*.js~
+*.html~
 *.py~
 .gitignore~
