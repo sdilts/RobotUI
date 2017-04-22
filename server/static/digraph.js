@@ -21,9 +21,13 @@ function Digraph() {
    * Add edge between Vertex v and Vertex w.
    */
   this.addEdge = function(v, w){
-    let d = v.pos.dist(w.pos);
-    this.matrix[v.name][w.name] = d;
-    this.matrix[w.name][v.name] = d;  //Add both.
+    let vx = this.vertices[v]['x'];
+    let vy = this.vertices[v]['y'];
+    let wx = this.vertices[w]['x'];
+    let wy = this.vertices[w]['y'];
+    let d = dist(vx, vy, wx, wy);
+    this.matrix[v][w] = d;
+    this.matrix[w][v] = d;  //Add both.
   }
 
   //Helper function for printing matrix.
@@ -32,16 +36,41 @@ function Digraph() {
   }
 
   this.draw = function(){
+    textAlign(CENTER);
+    for(let a in this.matrix){
+      for(let b in this.matrix[a]){
+          let x1 = this.vertices[a]['x'];
+          let y1 = this.vertices[a]['y'];
+          let x2 = this.vertices[b]['x'];
+          let y2 = this.vertices[b]['y'];
+          stroke(94, 124, 136, 128);
+          strokeWeight(3);
+          line(x1, y1, x2, y2);
+          let mx = (x1+x2)/2;
+          let my = (y1+y2)/2;
+          let d = Math.floor(this.matrix[a][b]*100)/100;
+          noStroke();
+          fill(195, 229, 247);
+          text(d, mx, my);
+      }
+    }
+
     for(let key in this.vertices){
       let x = this.vertices[key]['x'];
       let y = this.vertices[key]['y'];
-      stroke(254, 180, 28);
+      if(selected !== null && selected == key){
+        stroke(254, 230, 90);
+      }else{
+        stroke(234, 160, 21);
+      }
       strokeWeight(3);
       fill(155, 189, 207);
       ellipse(x, y, 30, 30);
-      textAlign(CENTER);
       noStroke();
+      fill(195, 229, 247);
       text(key, x, y-25);
     }
+
+
   }
 }
