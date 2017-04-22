@@ -7,6 +7,7 @@ var selected; //Boolean for whether a vertex is selected.
 var nameLabel; //Label for name input.
 var nameInput; //Name input.
 var clearButton; //Button for clearing points.
+var submitButton;
 
 /*
  * Initialize user interface.
@@ -45,14 +46,44 @@ function test(){
  */
 function draw(){
   background(54, 63, 69);
-  digraph.draw();
+    digraph.draw();
+    
 }
 
 function setInterface(){
   nameInput = createInput('');
-  nameLabel = createP('Point name:');
+    nameLabel = createP('Point name:');
+    submitButton = createButton('SUBMIT');
+    submitButton.mousePressed(submit);
   clearButton = createButton('CLEAR');
   clearButton.mousePressed(clearGraph);
+}
+
+
+function submit() {
+    console.log("this is the submit button");
+    $.ajax({
+	url: '/input/adjgraph/',
+	type: 'POST',
+	data: JSON.stringify(digraph.matrix),
+	contentType: 'application/json; charset=utf-8',
+	dataType: 'json',
+	async: false,
+	success: function(msg) {
+            alert(msg);
+	}
+    });
+    $.ajax({
+	url: '/input/vertices/',
+	type: 'POST',
+	data: JSON.stringify(digraph.matrix),
+	contentType: 'application/json; charset=utf-8',
+	dataType: 'json',
+	async: false,
+	success: function(msg) {
+            alert(msg);
+	}
+    });
 }
 
 function clearGraph(){
@@ -100,6 +131,7 @@ function centerElements(){
   cnv.position(x, y);
 
   nameLabel.position(x+width+25, y);
-  nameInput.position(x+width+25, y+35);
-  clearButton.position(x+width+25, y+75);
+    nameInput.position(x+width+25, y+35);
+    clearButton.position(x+width+25, y+75);
+    submitButton.position(x+ width+25, y + 100);
 }

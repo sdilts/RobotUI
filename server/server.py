@@ -47,11 +47,15 @@ def secret_page():
 def read_graph():
     #data = '{"a":{"b":5}}'
     graph = request.get_json()
-    print graph["a"]["b"]
+    print "This is the graph:"
+    print graph
     return "Graph submitted"
 
+@app.route('/input/vertices/', methods=['POST'])
+@requires_auth
 def read_points():
     points = request.get_json()
+    print "This is the points:"
     print points
     return "Graph submitted"
     
