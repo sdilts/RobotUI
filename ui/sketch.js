@@ -2,6 +2,7 @@ var cnv;  //Canvas object.
 var bckColor; //Backgorund color.
 var digraph;  //Directed graph data structure.
 var takenNames = []; //Array of taken vertex names for checking.
+var selected; //Boolean for whether a vertex is selected.
 
 var nameLabel; //Label for name input.
 var nameInput; //Name input.
@@ -51,10 +52,12 @@ function setInterface(){
   nameInput = createInput('');
   nameLabel = createP('Point name:');
   clearButton = createButton('CLEAR');
-  //clearButton.mousePressed(clear);
+  clearButton.mousePressed(clearGraph);
 }
 
-
+function clearGraph(){
+  digraph = new Digraph();
+}
 
 function mousePressed(){
   //Is the name taken?
