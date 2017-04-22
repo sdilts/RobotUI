@@ -32,7 +32,6 @@ function Digraph() {
   }
 
   this.draw = function(){
-    console.log(this.vertices);
     for(let key in this.vertices){
       let x = this.vertices[key]['x'];
       let y = this.vertices[key]['y'];
