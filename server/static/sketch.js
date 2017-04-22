@@ -96,7 +96,7 @@ function windowResized(){
  */
 function centerElements(){
   let x = (windowWidth-width)/2-50;  //Center horizontally.
-  let y = 50; //Margin from top.
+  let y = 100; //Margin from top.
   cnv.position(x, y);
 
   nameLabel.position(x+width+25, y);

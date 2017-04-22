@@ -1,15 +1,20 @@
 {% extends "home.html" %}
 
 {% block custom_header %}
-<!-- <link rel=stylesheet type=text/css href="{{ url_for('static',filename='set_layout.css') }}"> -->
-<!-- <script src="{{url_for('static',filename='stuff.js') }}"></script> -->
+
+<script language="javascript" type="text/javascript" src="{{url_for('static', filename='libraries/p5.js')}} "></script>
+  <!-- uncomment lines below to include extra p5 libraries -->
+  <script language="javascript" src="{{url_for('static', filename='libraries/p5.dom.js') }}"></script>
+  <!--<script language="javascript" src="libraries/p5.sound.js"></script>-->
+  <script language="javascript" type="text/javascript" src="{{url_for('static', filename='sketch.js') }}"></script>
+  <script language="javascript" type="text/javascript" src="{{url_for('static', filename='digraph.js') }}"></script>
+  <!-- this line removes any default padding and style. you might only need one of these values set. -->
+  <style> body {padding: 0; margin: 0;} </style>
 {% endblock %}
 
 {% block body %}
-<p> This is some text. Here's a button that does stuff: </p>
-<form onSubmit="computeInput()">
-  <h2>What do you wish to calculate?</h2>
-  <input id="equationInput" type="text" value="(1 + 5) * (8-4-1)">
-  <input type="submit" id="submitButton" value="Calculate">
-</form>
+  <h1>Path Editor</h1>
+  <div id="path-editor">
+    <!-- canvas goes here -->
+  </div>
 {% endblock %}
