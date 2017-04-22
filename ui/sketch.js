@@ -3,7 +3,9 @@ var bckColor; //Backgorund color.
 var digraph;  //Directed graph data structure.
 var takenNames = []; //Array of taken vertex names for checking.
 
-var name; //Name input.
+var nameLabel; //Label for name input.
+var nameInput; //Name input.
+var clearButton; //Button for clearing points.
 
 /*
  * Initialize user interface.
@@ -14,7 +16,7 @@ function setup() {
   digraph = new Digraph();
   setInterface();
   centerElements();
-  test();
+  //test();
 }
 
 //Temp, for testing.
@@ -33,7 +35,8 @@ function test(){
   digraph.addEdge(v3, v2);
   digraph.addEdge(v5, v3);
   digraph.addEdge(v3, v5);
-  console.log(digraph.matrix);
+  console.log(JSON.stringify(digraph.matrix));
+  console.log(JSON.stringify(digraph.vertices));
 }
 
 /*
@@ -41,17 +44,41 @@ function test(){
  */
 function draw(){
   background(54, 63, 69);
+  digraph.draw();
 }
 
 function setInterface(){
-  input = createInput();
+  nameInput = createInput('');
+  nameLabel = createP('Point name:');
+  clearButton = createButton('CLEAR');
+  //clearButton.mousePressed(clear);
 }
 
+
+
 function mousePressed(){
-  let v = new Vertex(input.value(), mouseX, mouseY);
-  takenNames.push(v.name);
-  console.log(v.name);
-  input.value('');
+  //Is the name taken?
+  let taken = takenNames.indexOf(nameInput.value()) != -1;
+  //Is the name empty?
+  let empty = nameInput.value() == '';
+  //Are the mouse coordinates inside the canvas?
+  let inside = mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height;
+
+  if(inside){
+    if(!empty){
+      if(!taken){
+        let v = new Vertex(nameInput.value(), mouseX, mouseY);
+        digraph.addVertex(v);
+        takenNames.push(v.name);
+        console.log(v.name);
+        nameInput.value('');
+      }else{
+        console.log("Point name is taken.");
+      }
+    }else{
+      console.log("Point name is empty.");
+    }
+  }
 }
 
 /*
@@ -69,5 +96,7 @@ function centerElements(){
   let y = 50; //Margin from top.
   cnv.position(x, y);
 
-  input.position(x+width+25, y);
+  nameLabel.position(x+width+25, y);
+  nameInput.position(x+width+25, y+35);
+  clearButton.position(x+width+25, y+75);
 }
