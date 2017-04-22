@@ -4,14 +4,15 @@ function Vertex(n, x, y) {
 }
 
 function Digraph() {
-  this.matrix = [];
+  this.matrix = new Object; //Adjacency matrix using dictionary.
 
   /*
    *  Initialize dictionary for new vertex.
    */
   this.addVertex = function(v) {
-    this.matrix[v.name] = [];
+    this.matrix[v.name] = new Object;
   }
+
   /*
    * Add edge between Vertex v and Vertex w.
    */
