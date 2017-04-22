@@ -1,4 +1,5 @@
 import requests
+import json
 from flask import Flask, request, Response, render_template
 from functools import wraps
 
@@ -40,6 +41,16 @@ def welcome():
 @requires_auth
 def secret_page():
     return "YOu are doomed!"
+
+@app.route('/input/_adj-graph', methods=['POST'])
+@requires_auth
+def read_graph():
+    #data = '{"a":{"b":5}}'
+    graph = json.loads(requests.json);
+    print graph
+    return str(graph["a"]["b"])
+
+    
 
 if __name__ == "__main__":
     app.run()
