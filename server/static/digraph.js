@@ -20,14 +20,19 @@ function Digraph() {
   /*
    * Add edge between Vertex v and Vertex w.
    */
-  this.addEdge = function(v, w){
+  this.addEdge = function(v, w, l){
     let vx = this.vertices[v]['x'];
     let vy = this.vertices[v]['y'];
     let wx = this.vertices[w]['x'];
     let wy = this.vertices[w]['y'];
     let d = dist(vx, vy, wx, wy);
-    this.matrix[v][w] = d;
-    this.matrix[w][v] = d;  //Add both.
+    if(lengthType.checked()){
+      this.matrix[v][w] = d/scl;
+      this.matrix[w][v] = d/scl;  //Add both.
+    }else{
+      this.matrix[v][w] = l;
+      this.matrix[w][v] = l;  //Add both.
+    }
   }
 
   //Helper function for printing matrix.
