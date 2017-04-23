@@ -85,21 +85,13 @@ def command_bot():
     print location
     # route = findPath(loc, goto)
 
-@app.route('/input/adjgraph/', methods=['POST'])
-@requires_auth
-def read_graph():
-    #data = '{"a":{"b":5}}'
-    graph = request.get_json()
-    print "This is the graph:"
-    print graph
-    return "Graph submitted"
-
-@app.route('/input/vertices/', methods=['POST'])
+@app.route('/input/submit/', methods=['POST'])
 @requires_auth
 def read_points():
-    points = request.get_json()
-    print "This is the points:"
-    print points
+    graph = request.get_json()
+    print "This is the graph:"
+    print graph["matrix"]
+    print graph["vertices"]
     return "Graph submitted"
 
 

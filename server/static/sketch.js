@@ -4,7 +4,6 @@ var digraph;  //Directed graph data structure.
 var takenNames = []; //Array of taken vertex names for checking.
 var selected = null; //Currently selected vertex for edge creation.
 var selLine = [4]; //Array of two points for drawing a selection line.
-var nameColor = color(214, 214, 214);  //Lerp the color.
 
 var pointSize = 40;
 var lineSize = 5;
@@ -86,29 +85,21 @@ function drawGrid(){
  * Submit the current graph to the server.
  */
 function submit() {
-    });
-    $.ajax({
-	url: '/input/vertices/',
-	type: 'POST',
-	data: JSON.stringify(digraph.vertices),
-	contentType: 'application/json; charset=utf-8',
-	dataType: 'json',
-	async: false,
-	success: function(msg) {
-            alert(msg);
-	}
-    });
-    console.log("this is the submit button");
-    $.ajax({
-	url: '/input/adjgraph/',
-	type: 'POST',
-	data: JSON.stringify(digraph.matrix),
-	contentType: 'application/json; charset=utf-8',
-	dataType: 'json',
-	async: false,
-	success: function(msg) {
-            alert(msg);
-	}
+  let graph = new Object();
+  graph['vertices'] = digraph.vertices;
+  graph['matrix'] = digraph.matrix;
+
+  $.ajax({
+  url: '/input/submit/',
+  type: 'POST',
+  data: JSON.stringify(graph),
+  contentType: 'application/json; charset=utf-8',
+  dataType: 'json',
+  async: false,
+  success: function(msg) {
+      alert(msg);
+  }
+  });
 }
 
 /*
