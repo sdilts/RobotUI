@@ -46,12 +46,6 @@ def getAngle(x1, y1, x2, y2):
     #math.degrees(x) for degrees, currently is in radians
     return angle;
 
-
-@app.context_processor
-def lookup_location():
-    return dict(location=get_location());
-
-
 @app.route('/')
 @requires_auth
 def welcome():
@@ -74,7 +68,7 @@ def render_command():
         if form.validate():
             # Save the comment here.
             flash('Bot commanded to go to ' + name)
-            r = requests.post('http://http://10.200.39.155/mailbox/'
+            # r = requests.post('http://http://10.200.39.155/mailbox/'
         else:
             flash('All the form fields are required. ')
  
