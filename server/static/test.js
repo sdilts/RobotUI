@@ -1,19 +1,20 @@
-
-
-test = function() {
-    var fish = new Object();
-    fish["a"] = new Object();
-    fish["a"]["b"] = 10;
-    console.log(JSON.stringify(fish));
-    $.ajax({
-	url: '/input/adjgraph/',
-	type: 'POST',
-	data: JSON.stringify(fish),
+function get_location() {
+    str = $.ajax({
+	url: '/output/location',
+	type: 'GET',
 	contentType: 'application/json; charset=utf-8',
 	dataType: 'json',
 	async: false,
 	success: function(msg) {
             alert(msg);
-    }
-});
+	}
+    });
+    console.log(str);
+    console.log(str["responseText"]);
+    document.getElementById("location").innerHTML = str["responseText"]
+}
+
+function command_bot() {
+    
+
 }
