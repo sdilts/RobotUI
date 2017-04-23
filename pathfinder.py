@@ -2,7 +2,7 @@ import math
 """
 This takes in an adjacency matrix [][] and associated points from an X,Y cartesian coordinate plane
 This outputs the shortest path from a point A to a point B from the matrix
-Note that this shortest path must traverse nodes and is consequently not just the Pythagorean theorem
+Note that this shortest path must traverse nodes and is consequently not just the pythagorean theorem
 """
 class Point(object):
     """Creates a point on a cartesian oordinate plane with values x and y."""
@@ -75,21 +75,31 @@ def dijkstra(adjMatrix, start, end):
     #print (path[end])
     return path[end]
 
-""" part two, calculating the distance and angles from the path and vertices """
+"""
+Part two, calculating the distance and angles from the path and vertices
+vertices is a list of points [point, point, ...]
+path is the output from dijkstra 
+string output is for convenience working with the arduino
+sans arduino this would return "vectors"
+"""
 def vectify(vertices, path):
+    output = ""
     vectors = []
     length = len(path)
     for i in range(length-1):
         angle = vertices[path[i]].angle(vertices[path[i+1]])
-        distance = vertices[path[i]].distance(vertices[path[i+1]])
-        vectors.append([[distance], [angle]])
-    print("Vectors, [magnitude, direction], ...", vectors)
+        magnitude = vertices[path[i]].distance(vertices[path[i+1]])
+        output += "[" + str(int(angle)) + "," + str(int(magnitude)) +"]"
+        vectors.append([[magnitude], [angle]])
+    print("Vectors, [magnitude, direction], ...", output)
+    return output
+
+#Example
 i = float("inf")
 adj = [[i,i,4,5],
        [i,i,7,3],
        [4,7,i,i],
        [5,3,i,i]];
-
-v = [Point(0,0),Point(7,7),Point(0,4),Point(5,0)]
+v = [Point(0,0),Point(4,7),Point(0,4),Point(5,0)]
 p = dijkstra(adj, 3, 2);
 vectify(v,p)
