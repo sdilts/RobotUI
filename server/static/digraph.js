@@ -68,7 +68,7 @@ function Digraph() {
       }else{
         stroke(234, 160, 21);
       }
-      strokeWeight(3);
+      strokeWeight(4);
       fill(155, 189, 207);
       ellipse(x, y, pointSize, pointSize);
       noStroke();

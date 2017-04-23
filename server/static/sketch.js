@@ -7,9 +7,9 @@ var selLine = [4]; //Array of two points for drawing a selection line.
 
 var pointSize = 40;
 var lineSize = 5;
-var scl = 20;
+var scl = 40;
 
-var interface;  //Div surrounding input options.
+var intf;  //Div surrounding input options.
 var nameLabel; //Label for name input.
 var nameInput; //Name input of vertices.
 var lengthLabel;  //Label for the length input.
@@ -34,6 +34,7 @@ function setup() {
  */
 function draw(){
   background(54, 63, 69); //Set background of sketch.
+  textSize(16);
   if(lengthType.checked()){
     drawGrid();
   }
@@ -51,14 +52,15 @@ function draw(){
  * Create DOM items through p5 and set necessary IDs.
  */
 function setInterface(){
-  interface = createDiv('');
-  interface.id('interface');
+  intf = createDiv('');
+  intf.id('interface');
   nameInput = createInput('');
   nameLabel = createP('Next Point Name:');
   lengthInput = createInput('');
   lengthLabel = createP('Next Edge Length:');
-  lengthType = createCheckbox('Use coordinates', false);
+  lengthType = createCheckbox('Use Coordinates', true);
   lengthType.mousePressed(changeLengthType);
+  lengthInput.attribute('disabled', 'true');
   submitButton = createButton('Submit');
   submitButton.id('submit');
   submitButton.mousePressed(submit);
@@ -99,7 +101,7 @@ function submit() {
     $.ajax({
 	url: '/input/vertices/',
 	type: 'POST',
-	data: JSON.stringify(digraph.matrix),
+	data: JSON.stringify(digraph.vertices),
 	contentType: 'application/json; charset=utf-8',
 	dataType: 'json',
 	async: false,
@@ -147,6 +149,9 @@ function mousePressed(){
     }else{
       if(lengthType.checked() || (lengthInput.value() != '' && (!isNaN(lengthInput.value())))){
         digraph.addEdge(selected, collision, lengthInput.value());
+      }
+      if(isNaN(lengthInput.value())){
+        lengthInput.value('');
       }
       selected = null;
     }
@@ -218,12 +223,12 @@ function centerElements(){
   let y = 100; //Margin from top.
   cnv.position(x, y);
 
-  interface.position(x+width, y);
+  intf.position(x+width, y);
   nameLabel.position(x+width+25, y+10);
   nameInput.position(x+width+25, y+50);
   lengthLabel.position(x+width+25, y+75);
   lengthInput.position(x+width+25, y+115);
   lengthType.position(x+width+25, y+150);
   clearButton.position(x+width+25, y+190);
-  submitButton.position(x+width+25, y + 230);
+  submitButton.position(x+width+25, y + 235);
 }
