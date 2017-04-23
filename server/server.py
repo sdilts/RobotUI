@@ -1,7 +1,7 @@
 import json
 import math
 import requests
-from pathfinder import getData
+from pathfinder import Pathfinder
 # from flask import Flask, render_template, flash, request
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 from flask import Flask, request, Response, render_template, flash
@@ -11,6 +11,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
+hiawatha = None
 
 def check_auth(username, password):
     """This function is called to check if a username /
@@ -56,6 +57,9 @@ class ReusableForm(Form):
     name = TextField('Goto Location:', validators=[validators.required()])
 
 
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+
+
 @app.route('/command-bot', methods=['GET', 'POST'])
 @requires_auth
 def render_command():
@@ -69,7 +73,16 @@ def render_command():
         if form.validate():
             # Save the comment here.
             flash('Bot commanded to go to ' + name)
-            # r = requests.post('http://http://10.200.39.155/mailbox/'
+            global hiawatha
+            str = hiawatha.goto_location(name)
+            if(str != None):
+                print "url"
+                print "http://10.200.39.155/mailbox/" + str
+                r = requests.post('http://10.200.39.155/mailbox/'+ str + '\n',headers=headers)
+                print "Status code:"
+                print r.status_code
+            else:
+                print "No path"
         else:
             flash('All the form fields are required. ')
  
@@ -79,30 +92,31 @@ def render_command():
     
     # return render_template('command.html')
 
-@app.route('/commands/goto/', methods=['POST'])
-@requires_auth
-def command_bot():
-    loc = request.get_json()
-    print location
-    # route = findPath(loc, goto)
+# @app.route('/commands/goto/', methods=['POST'])
+# @requires_auth
+# def command_bot():
+#     loc = request.get_json()
+#     print location
+#     # route = findPath(loc, goto)
 
 @app.route('/input/submit/', methods=['POST'])
 @requires_auth
 def read_points():
     graph = request.get_json()
     print "This is the graph:"
-    print graph["matrix"]
-    print graph["vertices"]
+    global hiawatha
+    hiawatha = Pathfinder(graph["matrix"], graph["vertices"])
     return "Graph submitted"
 
 
 @app.route('/output/location', methods=['GET'])
 @requires_auth
 def get_location():
-    r = requests.get('http://10.200.39.155/data/get/location')
-    j = json.loads(r.text)
-    return j["value"]
+    global hiawatha
+    return hiawatha.get_location()
 
     
 if __name__ == "__main__":
-    app.run()
+
+    #app.run()
+    app.run(host= '0.0.0.0')
