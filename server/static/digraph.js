@@ -44,13 +44,13 @@ function Digraph() {
           let x2 = this.vertices[b]['x'];
           let y2 = this.vertices[b]['y'];
           stroke(94, 124, 136, 128);
-          strokeWeight(3);
+          strokeWeight(lineSize);
           line(x1, y1, x2, y2);
           let mx = (x1+x2)/2;
           let my = (y1+y2)/2;
           let d = Math.floor(this.matrix[a][b]*100)/100;
           noStroke();
-          fill(195, 229, 247);
+          fill(210, 239, 247);
           text(d, mx, my);
       }
     }
@@ -65,10 +65,10 @@ function Digraph() {
       }
       strokeWeight(3);
       fill(155, 189, 207);
-      ellipse(x, y, 30, 30);
+      ellipse(x, y, pointSize, pointSize);
       noStroke();
-      fill(195, 229, 247);
-      text(key, x, y-25);
+      fill(210, 239, 247);
+      text(key, x, y-pointSize+10);
     }
 
 

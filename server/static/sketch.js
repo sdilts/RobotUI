@@ -3,12 +3,15 @@ var bckColor; //Backgorund color.
 var digraph;  //Directed graph data structure.
 var takenNames = []; //Array of taken vertex names for checking.
 var selected = null; //Currently selected vertex for edge creation.
-var selLine = []; //Array of two points for drawing a selection line.
+var selLine = [4]; //Array of two points for drawing a selection line.
+var pointSize = 40;
+var lineSize = 5;
 
+var interface;  //Div surrounding input options.
 var nameLabel; //Label for name input.
 var nameInput; //Name input.
 var clearButton; //Button for clearing points.
-var submitButton;
+var submitButton; //Button for submitting.
 
 /*
  * Initialize user interface.
@@ -22,40 +25,30 @@ function setup() {
   //test();
 }
 
-//Temp, for testing.
-function test(){
-  let v1 = new Vertex('first', 10, 300);
-  let v2 = new Vertex('second', 70, 300);
-  let v3 = new Vertex('third', 80, 400);
-  let v4 = new Vertex('fourth', 400, 200);
-  let v5 = new Vertex('fifth', 200, 100);
-  digraph.addVertex(v1);
-  digraph.addVertex(v2);
-  digraph.addVertex(v3);
-  digraph.addVertex(v4);
-  digraph.addVertex(v5);
-  digraph.addEdge(v1.name, v2.name);
-  digraph.addEdge(v3.name, v2.name);
-  digraph.addEdge(v5.name, v3.name);
-  digraph.addEdge(v3.name, v5.name);
-  console.log(JSON.stringify(digraph.matrix));
-  console.log(JSON.stringify(digraph.vertices));
-}
-
 /*
  * Looped through p5.
  */
 function draw(){
   background(54, 63, 69);
+  if(selected !== null){
+    stroke(154, 184, 196, 200);
+    strokeWeight(lineSize);
+    mouseMoved();
+    line(selLine[0], selLine[1], selLine[2], selLine[3]);
+  }
   digraph.draw();
 }
 
 function setInterface(){
+  interface = createDiv('');
+  interface.id('interface');
   nameInput = createInput('');
-    nameLabel = createP('Point name:');
-    submitButton = createButton('SUBMIT');
-    submitButton.mousePressed(submit);
-  clearButton = createButton('CLEAR');
+  nameLabel = createP('Next Point\'s Name:');
+  submitButton = createButton('Submit');
+  submitButton.id('submit');
+  submitButton.mousePressed(submit);
+  clearButton = createButton('Clear');
+  clearButton.id('clear');
   clearButton.mousePressed(clearGraph);
 }
 
@@ -111,7 +104,12 @@ function mousePressed(){
 }
 
 function mouseMoved(){
-
+  if(selected !== null){
+    selLine[0] = digraph.vertices[selected]['x'];
+    selLine[1] = digraph.vertices[selected]['y'];
+    selLine[2] = mouseX;
+    selLine[3] = mouseY;
+  }
 }
 
 /*
@@ -119,7 +117,7 @@ function mouseMoved(){
  */
 function checkClick(x, y){
   for(let key in digraph.vertices){
-    if(dist(digraph.vertices[key]['x'], digraph.vertices[key]['y'], x, y) < 15){
+    if(dist(digraph.vertices[key]['x'], digraph.vertices[key]['y'], x, y) < pointSize/2){
       return key;
     }
   }
@@ -142,11 +140,7 @@ function createVertex(){
         takenNames.push(v.name);
         console.log(v.name);
         nameInput.value('');
-      }else{
-        console.log("Point name is taken.");
       }
-    }else{
-      console.log("Point name is empty.");
     }
   }
 }
@@ -162,12 +156,13 @@ function windowResized(){
  *  Center/recenter canvas to window.
  */
 function centerElements(){
-  let x = (windowWidth-width)/2-50;  //Center horizontally.
+  let x = (windowWidth-width)/2-100;  //Center horizontally.
   let y = 100; //Margin from top.
   cnv.position(x, y);
 
-  nameLabel.position(x+width+25, y);
-    nameInput.position(x+width+25, y+35);
-    clearButton.position(x+width+25, y+75);
-    submitButton.position(x+ width+25, y + 100);
+  interface.position(x+width, y);
+  nameLabel.position(x+width+25, y+10);
+  nameInput.position(x+width+25, y+50);
+  clearButton.position(x+width+25, y+90);
+  submitButton.position(x+ width+25, y + 130);
 }
