@@ -1,6 +1,7 @@
 import json
 import math
 import requests
+from pathfinder import getData
 # from flask import Flask, render_template, flash, request
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 from flask import Flask, request, Response, render_template, flash
@@ -99,7 +100,7 @@ def read_graph():
 def read_points():
     points = request.get_json()
     print "This is the points:"
-    print points
+    print toVertexList(points)
     return "Graph submitted"
 
 
