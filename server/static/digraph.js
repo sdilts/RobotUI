@@ -56,6 +56,7 @@ function Digraph() {
           let d = Math.floor(this.matrix[a][b]*100)/100;
           noStroke();
           fill(210, 239, 247);
+          textSize(14);
           text(d, mx, my);
       }
     }
@@ -73,6 +74,7 @@ function Digraph() {
       ellipse(x, y, pointSize, pointSize);
       noStroke();
       fill(210, 239, 247);
+      textSize(16);
       text(key, x, y-pointSize+10);
     }
 

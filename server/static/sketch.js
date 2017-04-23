@@ -34,7 +34,6 @@ function setup() {
  */
 function draw(){
   background(54, 63, 69); //Set background of sketch.
-  textSize(16);
   if(lengthType.checked()){
     drawGrid();
   }
