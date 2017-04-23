@@ -39,6 +39,28 @@ class Point(object):
         dy = self.Y - other.Y
         return math.degrees(math.atan2(dy, dx));
 
+convertToNum = dict()
+convertFromNum = dict()
+
+
+
+def getData(matrix, vert):
+    index = 0;
+    vert = [];
+    for key in vert.iteritems():
+        convertToNum[key] = index
+        convertFromNum[index] = key
+        vert.append(Point(value["x"], value["y"]))
+    inf = float("inf")
+    for i in range(0, len(vert)):
+        vert.append([])
+        for j in range(0, len(vert)):
+            dist = matrix[convertFromNum[i]][convertFromNum[j]]
+            if(dist != None):
+                vert[i].append(dist)
+            else:
+                vert[i].append(i)
+
 """
 adjmatrix = adjaceny matrix [][]
 start = source vertex/node is an int, i.e. 0th node
