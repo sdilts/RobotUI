@@ -85,29 +85,21 @@ function drawGrid(){
  * Submit the current graph to the server.
  */
 function submit() {
-    console.log("this is the submit button");
-    $.ajax({
-	url: '/input/adjgraph/',
-	type: 'POST',
-	data: JSON.stringify(digraph.matrix),
-	contentType: 'application/json; charset=utf-8',
-	dataType: 'json',
-	async: false,
-	success: function(msg) {
-            alert(msg);
-	}
-    });
-    $.ajax({
-	url: '/input/vertices/',
-	type: 'POST',
-	data: JSON.stringify(digraph.vertices),
-	contentType: 'application/json; charset=utf-8',
-	dataType: 'json',
-	async: false,
-	success: function(msg) {
-            alert(msg);
-	}
-    });
+  let graph = new Object();
+  graph['vertices'] = digraph.vertices;
+  graph['matrix'] = digraph.matrix;
+
+  $.ajax({
+  url: '/input/submit/',
+  type: 'POST',
+  data: JSON.stringify(graph),
+  contentType: 'application/json; charset=utf-8',
+  dataType: 'json',
+  async: false,
+  success: function(msg) {
+      alert(msg);
+  }
+  });
 }
 
 /*
@@ -202,6 +194,8 @@ function createVertex(){
         takenNames.push(v.name);
         console.log(v.name);
         nameInput.value('');
+      }else{
+        //nameColor = new Color(255, 0, 0);
       }
     }
   }
