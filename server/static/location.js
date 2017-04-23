@@ -2,6 +2,7 @@ function get_location() {
     str = $.ajax({
 	url: '/output/location',
 	type: 'GET',
+	data: JSON.stringify(digraph.matrix),
 	contentType: 'application/json; charset=utf-8',
 	dataType: 'json',
 	async: false,
@@ -10,11 +11,6 @@ function get_location() {
 	}
     });
     console.log(str);
-    console.log(str["responseText"]);
-    document.getElementById("location").innerHTML = str["responseText"]
-}
-
-function command_bot() {
-    
+    //document.ElementById("location").innterHTML(
 
 }

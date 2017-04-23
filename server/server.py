@@ -1,11 +1,14 @@
 import json
 import math
 import requests
-from flask import Flask, request, Response, render_template
+# from flask import Flask, render_template, flash, request
+from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
+from flask import Flask, request, Response, render_template, flash
 from functools import wraps
 
 app = Flask(__name__)
-
+app.config.from_object(__name__)
+app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
 
 def check_auth(username, password):
@@ -43,16 +46,44 @@ def getAngle(x1, y1, x2, y2):
     #math.degrees(x) for degrees, currently is in radians
     return angle;
 
-# examples
 @app.route('/')
 @requires_auth
 def welcome():
     return render_template('set_layout.html')
 
-@app.route('/secret-page')
+class ReusableForm(Form):
+    name = TextField('Goto Location:', validators=[validators.required()])
+
+
+@app.route('/command-bot', methods=['GET', 'POST'])
 @requires_auth
-def secret_page():
-    return "This works"
+def render_command():
+    form = ReusableForm(request.form)
+ 
+    print form.errors
+    if request.method == 'POST':
+        name=request.form['name']
+        print name
+ 
+        if form.validate():
+            # Save the comment here.
+            flash('Bot commanded to go to ' + name)
+            # r = requests.post('http://http://10.200.39.155/mailbox/'
+        else:
+            flash('All the form fields are required. ')
+ 
+    return render_template('command.html', form=form)
+
+
+    
+    # return render_template('command.html')
+
+@app.route('/commands/goto/', methods=['POST'])
+@requires_auth
+def command_bot():
+    loc = request.get_json()
+    print location
+    # route = findPath(loc, goto)
 
 @app.route('/input/adjgraph/', methods=['POST'])
 @requires_auth
@@ -70,7 +101,15 @@ def read_points():
     print "This is the points:"
     print points
     return "Graph submitted"
-    
 
+
+@app.route('/output/location', methods=['GET'])
+@requires_auth
+def get_location():
+    r = requests.get('http://10.200.39.155/data/get/location')
+    j = json.loads(r.text)
+    return j["value"]
+
+    
 if __name__ == "__main__":
     app.run()
