@@ -15,17 +15,14 @@ p{
 }
 
 canvas{
-  border: 3px solid #222222;
+  outline: 3px solid #222222;
   box-shadow: 0px 5px 5px #333333;
 }
 
-div{
+#interface{
   background-color: #92A9B9;
   color: #92A9B9;
-}
-
-#interface{
-  border: 3px solid #222222;
+  outline: 3px solid #222222;
   width: 200px;
   height: 800px;
   box-shadow: 2px 5px 5px #333333;
@@ -38,11 +35,22 @@ input{
   background-color: #D6D6D6;
 }
 
+input:disabled{
+  background-color: #A6A6A6;
+}
+
 button{
   background-color: #363F45;
   font-weight: bold;
   width: 150px;
   height: 30px;
+}
+
+div input{
+  width: auto;
+  height: auto;
+  padding-left:0px;
+
 }
 
 #submit{
