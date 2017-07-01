@@ -4,4 +4,5 @@ lib/
 *.js~
 *.html~
 *.py~
+*.pyc
 .gitignore~

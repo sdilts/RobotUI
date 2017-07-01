@@ -59,44 +59,6 @@ class Pathfinder(object):
             dy = self.Y - other.Y
             return math.degrees(math.atan2(dy, dx));
 
-    # def dist(self, matrix, start, end):
-    #     if(start == end):
-    #         return "someting"
-    #     else:
-    #         for elem in matrix[start]:
-
-    # def dfa_apths)graph, start, goal):
-    #     stack - [(start, [start])]
-    #     while stack:
-    #         (vertex, path) = stack.pop()
-    #         for next in graph[vertex] - set(path):
-    #             if next == goal:
-    #                 yeild path + [next]
-    #             else:
-    #                 stack.append((next, path + [next])); 
-
-    # def dist(self,matrix, start, end):
-    #     print "matrix in dist:"
-    #     print matrix
-    #     print "staring in dist:"
-    #     print start
-    #     visited = []
-    #     stack = deque()
-
-    #     stack.append(start)
-    #     while(len(visited) != len(matrix)):
-    #         print stack
-    #         elem = stack.pop()
-    #         stack.append(elem)
-    #         visited.append(elem);
-    #         if elem == end:
-    #             stack.pop();
-    #             return stack;
-        
-    #         for itm in matrix[elem]:
-    #             if not (itm in visited):
-    #                 stack.append(itm)
-    #     return stack;
 
     def Dijkstra(self,G,start,end=None):
 	"""
