@@ -75,13 +75,9 @@ class Map(object):
     def __shortestPathLoc(self, start, end):
         """Computes the points, in order, of the shortest path between two nodes"""
         D,P = self.dijkstra(start,end)
+        if not (end in P):
+            raise ValueError("Cannot reach the node %s" % end)
         Path = []
-        # original code
-        # while 1:
-        #     Path.append(end)
-        #     if end == start: break
-        #     end = P[end]
-        # its nessecary to build the list, as p[elem] will give the predecesor of elem
         Path.append(end)
         while end != start:
             end = P[end]
@@ -95,23 +91,27 @@ class Map(object):
         Positive angle; turn clockwise
         negative angle: counterclockwise
         """
-        p = []
-        named_path = self.__shortestPathLoc(robot.cur_location, end)
-        print("Named path:")
-        print(named_path)
+        if end in self.adj:
+            p = []
+            named_path = self.__shortestPathLoc(robot.cur_location, end)
+            print("Named path:")
+            print(named_path)
 
-        iterator = iter(named_path)
-        latest_heading = robot.cur_heading
-        print("Currently facing: %d" % latest_heading)
-        last_visit = next(iterator)
-        for loc in iterator:
-            edge = self.adj[last_visit][loc]
-            print("Target dir: %d" % edge.angle)
-            angle = _compute_steering_angle(latest_heading, edge.angle)
-            p.append(ConnectionData(dist=edge.dist, angle=angle))
-            print("Turning with: %d" % p[-1].angle)
-            latest_heading = edge.angle
+            iterator = iter(named_path)
+            latest_heading = robot.cur_heading
             print("Currently facing: %d" % latest_heading)
-            last_visit = loc
-        p.reverse()
-        return (p, latest_heading)
+            last_visit = next(iterator)
+            for loc in iterator:
+                edge = self.adj[last_visit][loc]
+                print("Target dir: %d" % edge.angle)
+                angle = _compute_steering_angle(latest_heading, edge.angle)
+                p.append(ConnectionData(dist=edge.dist, angle=angle))
+                print("Turning with: %d" % p[-1].angle)
+                latest_heading = edge.angle
+                print("Currently facing: %d" % latest_heading)
+                last_visit = loc
+                p.reverse()
+                return (p, latest_heading)
+        # if said destination doesn't exist:
+        raise ValueError("Point %s does not exist" % end)
+    # return ([], robot.cur_heading)
