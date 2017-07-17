@@ -1,8 +1,14 @@
 import math
+from Robot import Robot
 from collections import namedtuple
 # from robotControls.dijkstra import shortestPath
 
 ConnectionData = namedtuple("ConnectionData", "dist angle")
+# might need this?
+# class ConnectionData(namedtuple("ConnectionData", "dist angle")):
+#     def __cmp__(self, other):
+#         return self.dist - other.dist
+
 def _get_bearing_angle(a, b):
     """Returns the bearing angle, with theta between -180 <= 0 < 180.
     Negative sign means that angle is on the left side of 0 degrees
@@ -14,15 +20,12 @@ def _get_bearing_angle(a, b):
     #     theta = math.pi + math.pi + theta;
     return theta
 
+def _compute_steering_angle(a, b):
+    """Computes the steeering angle from previous heading a to new heading b"""
+    return ((((bearing - heading) % 360) + 540) % 360) - 180
+
 class Map(object):
 
-    def get_bearing_angle(a, b):
-        theta = math.atan2(b["x"] - a["x"], b["y"] - a["y"])
-        if theta < 0:
-            theta = math.pi + theta;
-        return theta
-    
-    def __init__(adj, points):
     def __init__(self, adj, points):
         """Initializes the map object with an adjeceny matrix
         and a set of points. Both are full of key-value pairs
@@ -79,3 +82,20 @@ class Map(object):
             Path.append(end)
         Path.reverse()
         return Path
+
+    def get_directions(self, robot, start, end):
+        """Computes the points, in order, of the shortest path
+        between two nodes and the angle the robot needs to turn.
+        Positive angle; turn clockwise
+        negative angle: counterclockwise
+        """
+        p = []
+        named_path = self.__shortestPathLoc(start,end)
+        latest_heading = robot.cur_heading
+        for loc in named_path:
+            loc = self.adj[loc]
+            angle = self._compute_steering_angle(latest_heading, loc.angle)
+            p.append(ConnectionData(dist=loc.dist, angle=angle))
+            latest_heading = loc.angle
+        p.reverse()
+        return p
