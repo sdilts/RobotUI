@@ -65,10 +65,10 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleW
 def render_command():
     form = ReusableForm(request.form)
  
-    print form.errors
+    print (form.errors)
     if request.method == 'POST':
         name=request.form['name']
-        print name
+        print (name)
  
         if form.validate():
             # Save the comment here.
@@ -76,13 +76,13 @@ def render_command():
             global hiawatha
             str = hiawatha.goto_location(name)
             if(str != None):
-                print "url"
-                print "http://10.200.39.155/mailbox/" + str
+                print ("url")
+                print ("http://10.200.39.155/mailbox/" + str)
                 r = requests.post('http://10.200.39.155/mailbox/'+ str + '\n',headers=headers)
-                print "Status code:"
-                print r.status_code
+                print ("Status code:")
+                print (r.status_code)
             else:
-                print "No path"
+                print ("No path")
         else:
             flash('All the form fields are required. ')
  
@@ -103,7 +103,7 @@ def render_command():
 @requires_auth
 def read_points():
     graph = request.get_json()
-    print "This is the graph:"
+    print ("This is the graph:")
     global hiawatha
     hiawatha = Pathfinder(graph["matrix"], graph["vertices"])
     return "Graph submitted"
