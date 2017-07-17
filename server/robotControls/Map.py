@@ -1,6 +1,6 @@
 import math
-from Robot import Robot
 from robotControls.priodict import priorityDictionary
+from robotControls.Robot import Robot
 from collections import namedtuple
 # from robotControls.dijkstra import shortestPath
 
@@ -16,14 +16,17 @@ def _get_bearing_angle(a, b):
     """
     if a["x"] == b["x"] and a["y"] == b["y"]:
         raise ValueError("A point cannot have an angle between itself",'a','b')
-    theta = degrees(math.atan2(b["x"] - a["x"], b["y"] - a["y"]))
+    # calc theta:
+    return (math.degrees(math.atan2(b["x"] - a["x"], b["y"] - a["y"])) + 180) % 360
     # if theta < 0:
     #     theta = math.pi + math.pi + theta;
-    return theta
+    # return theta
 
-def _compute_steering_angle(a, b):
-    """Computes the steeering angle from previous heading a to new heading b"""
-    return ((((bearing - heading) % 360) + 540) % 360) - 180
+def _compute_steering_angle(to, fro):
+    """Computes the steeering angle from previous heading a to new heading b.
+    Assumes that angles are in degrees.
+    """
+    return ((((fro - to) % 360) + 540) % 360) - 180
 
 class Map(object):
 
@@ -38,7 +41,9 @@ class Map(object):
             self.adj[v] = dict()
             for n in adj[v].keys():
                 if not v == n:
-                    self.adj[v][n] = ConnectionData(dist=adj[v][n], angle=_get_bearing_angle(points[v], points[n]))
+                    self.adj[v][n] = ConnectionData(dist=int(adj[v][n]), angle=_get_bearing_angle(points[v], points[n]))
+        print("adj matrix:")
+        print(self.adj)
 
 
     def dijkstra(self, start, end=None):
@@ -52,10 +57,10 @@ class Map(object):
         Q = priorityDictionary() # estimated distances of non-final vertices
         Q[start] = ConnectionData(dist=0, angle=None)
 
-        # iterates over the priority queue's keys
+        # iterates over the priority queue's keys, remove as you go.
         for v in Q:
             D[v] = Q[v]
-            if v == end; break;
+            if v == end: break;
 
             for w in self.adj[v]:
                 vwLength = D[v].dist + self.adj[v][w].dist
@@ -84,19 +89,29 @@ class Map(object):
         Path.reverse()
         return Path
 
-    def get_directions(self, robot, start, end):
+    def get_directions(self, robot, end):
         """Computes the points, in order, of the shortest path
         between two nodes and the angle the robot needs to turn.
         Positive angle; turn clockwise
         negative angle: counterclockwise
         """
         p = []
-        named_path = self.__shortestPathLoc(start,end)
+        named_path = self.__shortestPathLoc(robot.cur_location, end)
+        print("Named path:")
+        print(named_path)
+
+        iterator = iter(named_path)
         latest_heading = robot.cur_heading
-        for loc in named_path:
-            loc = self.adj[loc]
-            angle = self._compute_steering_angle(latest_heading, loc.angle)
-            p.append(ConnectionData(dist=loc.dist, angle=angle))
-            latest_heading = loc.angle
+        print("Currently facing: %d" % latest_heading)
+        last_visit = next(iterator)
+        for loc in iterator:
+            edge = self.adj[last_visit][loc]
+            print("Target dir: %d" % edge.angle)
+            angle = _compute_steering_angle(latest_heading, edge.angle)
+            p.append(ConnectionData(dist=edge.dist, angle=angle))
+            print("Turning with: %d" % p[-1].angle)
+            latest_heading = edge.angle
+            print("Currently facing: %d" % latest_heading)
+            last_visit = loc
         p.reverse()
-        return p
+        return (p, latest_heading)

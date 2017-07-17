@@ -1,7 +1,8 @@
 import json
 import math
 import requests
-from pathfinder import Pathfinder
+import robotControls.Map as Map
+from robotControls.Robot import Robot
 # from flask import Flask, render_template, flash, request
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 from flask import Flask, request, Response, render_template, flash
@@ -12,6 +13,9 @@ app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
 hiawatha = None
+
+r = Robot("Fred", "10.200.39.155", "a")
+
 
 def check_auth(username, password):
     """This function is called to check if a username /
@@ -64,32 +68,37 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleW
 @requires_auth
 def render_command():
     form = ReusableForm(request.form)
- 
+
     print (form.errors)
     if request.method == 'POST':
         name=request.form['name']
         print (name)
- 
+
         if form.validate():
+            global r
             # Save the comment here.
             flash('Bot commanded to go to ' + name)
             global hiawatha
-            str = hiawatha.goto_location(name)
-            if(str != None):
-                print ("url")
-                print ("http://10.200.39.155/mailbox/" + str)
-                r = requests.post('http://10.200.39.155/mailbox/'+ str + '\n',headers=headers)
-                print ("Status code:")
-                print (r.status_code)
-            else:
-                print ("No path")
+            # str = hiawatha.goto_location(name)
+            # if(str != None):
+            #     print ("url")
+            #     print ("http://10.200.39.155/mailbox/" + str)
+            #     r = requests.post('http://10.200.39.155/mailbox/'+ str + '\n',headers=headers)
+            #     print ("Status code:")
+            #     print (r.status_code)
+            # else:
+            #     print ("No path")
+            directions, last_angle = hiawatha.get_directions(r, name)
+            r.cur_location = name
+            r.cur_heading = last_angle
+            print(directions)
         else:
             flash('All the form fields are required. ')
- 
+
     return render_template('command.html', form=form)
 
 
-    
+
     # return render_template('command.html')
 
 # @app.route('/commands/goto/', methods=['POST'])
@@ -105,7 +114,8 @@ def read_points():
     graph = request.get_json()
     print ("This is the graph:")
     global hiawatha
-    hiawatha = Pathfinder(graph["matrix"], graph["vertices"])
+    hiawatha = Map.Map(graph["matrix"], graph["vertices"])
+    #  assert app.debug == False
     return "Graph submitted"
 
 
@@ -115,7 +125,7 @@ def get_location():
     global hiawatha
     return hiawatha.get_location()
 
-    
+
 if __name__ == "__main__":
 
     #app.run()
