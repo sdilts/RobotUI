@@ -1,8 +1,8 @@
 server/UI_Server
 lib/
 
-*.js~
-*.html~
-*.py~
+# emacs backup files
+*~
+
+# python compile files
 *.pyc
-.gitignore~
