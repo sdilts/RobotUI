@@ -1,5 +1,6 @@
 import math
 from Robot import Robot
+from robotControls.priodict import priorityDictionary
 from collections import namedtuple
 # from robotControls.dijkstra import shortestPath
 
